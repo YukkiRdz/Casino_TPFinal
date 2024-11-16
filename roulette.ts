@@ -1,0 +1,3 @@
+class Ruleta implements Game{
+    
+}
