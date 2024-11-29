@@ -1,3 +1,0 @@
-class Ruleta implements Game{
-    
-}

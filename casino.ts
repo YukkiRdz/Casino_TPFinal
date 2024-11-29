@@ -1,7 +1,7 @@
-class Casino {
+export class Casino {
     private name: string;
     private players: Player[] = []; //inicializa el array como vacio;
-    private games: Game[];
+    private games: Game[] = [];
 
     constructor(name: string){
         this.name = name;
@@ -36,57 +36,90 @@ class Casino {
 
     //methods
 
+    //registrar usuario;
     registerUser(user: Player): void {
         //verifica si el usuario esta registrado o no;
         const registeredUser = this.players.find(player => player.getName() === user.getName());
         //si el usuario fue encontrado;
         if (registeredUser) {
-            console.log(`El jugador ${user.getName()} ya está registrado.`);
+            console.error(`The user ${user.getName()} is already registered.`);
         } //si el usuario NO fue encontrado lo agreaga al array;
             else {
             this.players.push(user);
-            console.warn(`El jugador ${user.getName()} ha sido registrado con éxito.`);
+            console.warn(`The user ${user.getName()} has been registered successfully.`);
         }
     }
 
+    //agregar fondos;
     addFounds(user: Player, amount: number): void {
         //verifica que el monto de dinero sea mayor que 0;
         if (amount <= 0) {
-            console.error('El monto a ingresar debe ser mayor a 0');
-            return //return para que no se ejecute el resto del codigo;
+            console.error('The amount to be entered must be greater than 0.');
+            return; //return para que no se ejecute el resto del codigo;
         }
 
         //verifica si el usuario esta registrado o no;
         const registeredUser = this.players.find(player => player.getName() === user.getName());
         //si el usuario no esta registrado;
         if (!registeredUser) {
-            console.error(`El usuario ${user.getName()} no está registrado.`);
-            return
+            console.error(`The user ${user.getName()} isn't registered.`);
+            return;
         }
 
         //define una constante para guardar el monto acumulado y se modifica el dinero del usuario;
         const newWallet = registeredUser.getMoney() + amount;
         registeredUser.setMoney(newWallet);
-        console.warn(`Se ha añadido $${amount} al usuario ${user.getName()}.`);
-        console.log(`El monto actual del usuario ${user.getName()} es $${newWallet}.`);
+        console.warn(`$${amount} has been added to the user ${user.getName()}.`);
+        console.log(`The current amount of user ${user.getName()} is $${newWallet}.`);
     }
 
-    chooseGame(user: Player, game:Game): void{
+    //elegir jugador
+    choosePlayer(user: Player): Player | undefined {
         //verifica si el usuario esta registrado o no;
-        const registeredUser = this.players.find(player => player.getName() === user.getName());
+        const chosenPlayer = this.players.find(player => player.getName() === user.getName());
         //si el usuario no esta registrado;
-        if (!registeredUser) {
-            console.error(`El usuario ${user.getName()} no está registrado.`);
-            return
+        if (!chosenPlayer) {
+            console.error(`The player ${user.getName()} isn't registered.`);
+            return undefined;
+        } else {
+            console.log(`The player ${user.getName()} has been chosen.`);
+            return chosenPlayer;
         }
+    }
 
+    //elegir juego
+    chooseGame(game:Game): Game | undefined{
         //verifica si el juego existe;
-        const selectedGame = this.games.find(game => game === game);
+        const selectedGame = this.games.find(g => g.getName() === game.getName());
         //si NO existe;
         if (!selectedGame) {
-            console.error('El juego seleccionado no existe.');
-            return
+            console.error(`The selected game doesn't exist.`);
+            return undefined;
+        } else {
+            console.log(`The user chose ${selectedGame.getName()}.`);
+            return selectedGame;
         }
-        console.log(`El jugador ${user.getName()} eligió ${selectedGame.getName()}.`);
+    }
+
+    //jugar
+    playGame(chosenPlayer: Player, selectedGame: Game): void{
+        //Verifica que anteriormente se haya elegido el jugador;
+        if(!chosenPlayer) {
+            console.error(`The player was not chosen.`)
+            return;
+        }
+
+        //Verifica que anteriormente se haya elegido el juego;
+        if(!selectedGame) {
+            console.error("The game was not chosen.")
+            return;
+        }
+
+        //Si el juego y el jugador han sido elegidos;
+        if (chosenPlayer  && selectedGame) {
+            console.log(`Starting the game ${selectedGame.getName()} as the player ${chosenPlayer.getName()}.`);
+            //Inicia el juego con el jugador elegido;
+            selectedGame.start(chosenPlayer); //metodo dentro del juego;
+        }
     }
 }
