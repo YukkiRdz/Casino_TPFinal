@@ -1,5 +1,6 @@
 export abstract class SlotMachine {
     protected symbols: string[];
+    protected minBet: number = 1;
 
     constructor(symbols: string[]) {
         this.symbols = symbols;
@@ -28,10 +29,35 @@ export abstract class SlotMachine {
         return winningMessage;
     }
     
-// Método que ejecuta una jugada completa: realiza una tirada y verifica las ganancias.
-    public play(): { result: string; message: string } {
-        const result = this.spin();
-        const message = this.checkWinnings(result);
-        return { result, message };
-    }
-}
+        // Método que ejecuta una jugada completa: realiza una tirada y verifica las ganancias.
+        public play(user: Player): { result: string; message: string } {
+            const userBalance = user.getMoney();
+            if (userBalance < this.minBet) {
+                return { result: '', message: 'Insufficient balance to play.' };
+            } //verifica el saldo del usuario
+    
+           user.setMoney(userBalance - this.minBet); //si el saldo es suficiente se resta.
+    
+           //ejecución del juego
+            const result = this.spin();
+            const message = this.checkWinnings(result);
+    
+            //actualización del saldo en caso de ganancia.
+            if (message.startsWith('You won')) {
+                const winnings = parseInt(message.split(' ')[2]);
+                user.setMoney(user.getMoney() + winnings);
+            }
+    
+            return { result, message };
+        }
+       
+            // Método que inicia el juego, englobando todos los métodos necesarios.
+            public start(user: Player): void {
+                const gameResult = this.play(user);
+                console.log(`Result: ${gameResult.result}`);
+                console.log(gameResult.message);
+            }
+        }
+    
+    
+    
