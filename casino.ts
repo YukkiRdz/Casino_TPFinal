@@ -1,10 +1,18 @@
+//imports { 3 juegos y jugador};
+import { BlackJack } from "./Games/BlackJack/BlackJack";
 export class Casino {
     private name: string;
     private players: Player[] = []; //inicializa el array como vacio;
-    private games: Game[] = [];
+    private games: (BlackJack | Roullette | SlotMachine) = [];
 
     constructor(name: string){
         this.name = name;
+        //inicializa el array con los juegos creados;
+        this.games = [
+            new BlackJack(),
+            new Roullette(),
+            new SlotMachine(),
+        ];
     }
 
     //getters
