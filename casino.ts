@@ -1,9 +1,15 @@
-//imports { 3 juegos y jugador};
+//imports { roullette y player};
 import { BlackJack } from "./Games/BlackJack/BlackJack";
+import { SlotMachine } from "./Games/SlotMachine/slotMachineAbstract";
+import { AnimalSlotMachine } from "./Games/SlotMachine/slotMachineAnimals";
+import { FruitSlotMachine } from "./Games/SlotMachine/slotMachineFruits";
+import { NumberSlotMachine } from "./Games/SlotMachine/slotMachineNumbers";
+
+
 export class Casino {
     private name: string;
     private players: Player[] = []; //inicializa el array como vacio;
-    private games: (BlackJack | Roullette | SlotMachine) = [];
+    private games: (BlackJack | Roullette | SlotMachine)[] = [];
 
     constructor(name: string){
         this.name = name;
@@ -11,7 +17,9 @@ export class Casino {
         this.games = [
             new BlackJack(),
             new Roullette(),
-            new SlotMachine(),
+            new FruitSlotMachine(),
+            new NumberSlotMachine(),
+            new AnimalSlotMachine()
         ];
     }
 
@@ -25,7 +33,7 @@ export class Casino {
         return this.players;
     }
 
-    public getGames(): Game[] {
+    public getGames(): (BlackJack | Roullette | SlotMachine)[] {
         return this.games;
     }
 
@@ -38,7 +46,7 @@ export class Casino {
         this.players = players;
     }
 
-    public setGames(games: Game[]) {
+    public setGames(games: (BlackJack | Roullette | SlotMachine)[]) {
         this.games = games;
     }
 
@@ -96,7 +104,7 @@ export class Casino {
     }
 
     //elegir juego
-    chooseGame(game:Game): Game | undefined{
+    chooseGame(game: (BlackJack | Roullette | SlotMachine)): (BlackJack | Roullette | SlotMachine) | undefined{
         //verifica si el juego existe;
         const selectedGame = this.games.find(g => g.getName() === game.getName());
         //si NO existe;
@@ -110,7 +118,7 @@ export class Casino {
     }
 
     //jugar
-    playGame(chosenPlayer: Player, selectedGame: Game): void{
+    playGame(chosenPlayer: Player, selectedGame: (BlackJack | Roullette | SlotMachine)): void{
         //Verifica que anteriormente se haya elegido el jugador;
         if(!chosenPlayer) {
             console.error(`The player was not chosen.`)
