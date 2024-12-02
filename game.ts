@@ -1,3 +1,4 @@
-interface Game {
-
+export interface Game {
+    startGame(): void; 
+    finishGame(): void; 
 }
