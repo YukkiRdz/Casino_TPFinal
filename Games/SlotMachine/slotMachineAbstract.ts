@@ -1,6 +1,7 @@
 import { Player } from "../../Player";
+import { Game } from "../../game";
 
-export abstract class SlotMachine {
+export abstract class SlotMachine implements Game {
     protected symbols: string[];
     protected minBet: number = 1;
     protected gameName: string;
@@ -68,5 +69,16 @@ export abstract class SlotMachine {
         const gameResult = this.play(user);
         console.log(`Result: ${gameResult.result}`);
         console.log(gameResult.message);
+    }
+
+    // Implementación del método startGame de la interfaz Game.
+    public startGame(): void {
+        console.log(`${this.gameName} is starting!`);
+
+    }
+
+    // Implementación del método finishGame de la interfaz Game.
+    public finishGame(): void {
+        console.log(`${this.gameName} has finished!`);
     }
 }
