@@ -12,13 +12,16 @@ export abstract class SlotMachine {
         this.symbols = symbols;
         this.gameName = gameName;
     }
-
+    
+    // Método abstracto para definir combinaciones ganadoras.
     public abstract winningsCombinations(): { combination: string; winning: number }[];
 
+    // Método que devuelve el nombre del juego.
     public getName(): string {
         return this.gameName;
     }
 
+    // Método que simula una tirada de la máquina tragamonedas.
     public spin(): string {
         const result: string[] = [];
         for (let i = 0; i < 3; i++) {
@@ -28,6 +31,7 @@ export abstract class SlotMachine {
         return result.join(' ');
     }
 
+     // Método que verifica si el resultado de la tirada coincide con alguna combinación ganadora.
     public checkWinnings(result: string): string {
         const combinations = this.winningsCombinations();
         let winningMessage = 'You lost, good luck next time.';
@@ -39,6 +43,7 @@ export abstract class SlotMachine {
         return winningMessage;
     }
 
+     // Método que permite al jugador jugar una ronda.
     public play(user: Jugador): { result: string; message: string } {
         const userBalance = user.getDinero();
         if (userBalance < this.minBet) {
@@ -58,6 +63,7 @@ export abstract class SlotMachine {
         return { result, message };
     }
 
+    // Método que inicia el juego y muestra el resultado en la consola.
     public start(user: Jugador): void {
         const gameResult = this.play(user);
         console.log(`Result: ${gameResult.result}`);
