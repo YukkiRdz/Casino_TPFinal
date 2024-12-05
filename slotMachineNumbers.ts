@@ -1,4 +1,3 @@
-// numberSlotMachine.ts
 import { SlotMachine } from "./slotMachineAbstract";
 
 export class NumberSlotMachine extends SlotMachine {
