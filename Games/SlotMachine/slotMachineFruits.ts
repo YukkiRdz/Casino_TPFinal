@@ -3,7 +3,8 @@ import { SlotMachine } from "./slotMachineAbstract";
 export class FruitSlotMachine extends SlotMachine {
     constructor() {
         const fruitSymbols = ['🍒', '🍌', '🍓', '🍊', '🍇'];
-        super(fruitSymbols);
+        const gameName = "Fruit Slot Machine";
+        super(fruitSymbols, gameName);
     }
 
     public winningsCombinations(): { combination: string; winning: number }[] {
