@@ -1,7 +1,8 @@
 import { Carta } from "./Carta";
 import { Mazo } from "./Mazo";
 import { Crupier } from "./Crupier";
-import * as rls from "readline";
+import * as readlineSync from "readline-sync";
+
 
 export class BlackJack {
   private name: string;
@@ -47,7 +48,9 @@ export class BlackJack {
         return;
       }
 
-      const decision = rls.question("¿Quieres pedir otra carta? (s/n): ");
+      const decision = readlineSync.question(
+        "¿Quieres pedir otra carta? (s/n): "
+      );
       if (decision.toLowerCase() !== "s") {
         break;
       }
