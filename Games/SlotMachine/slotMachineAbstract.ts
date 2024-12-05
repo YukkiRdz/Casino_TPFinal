@@ -1,10 +1,17 @@
+import { Player } from "../../Player";
 export abstract class SlotMachine {
+    private name: string;
     protected symbols: string[];
     protected minBet: number = 1;
 
     constructor(symbols: string[]) {
         this.symbols = symbols;
     }
+    //Getters
+    public getName(): string {
+        return this.name
+    }
+
     public abstract winningsCombinations(): { combination: string; winning: number }[];
 
  // Método que simula una tirada de la máquina tragamonedas.
@@ -50,7 +57,6 @@ export abstract class SlotMachine {
     
             return { result, message };
         }
-       
             // Método que inicia el juego, englobando todos los métodos necesarios.
             public start(user: Player): void {
                 const gameResult = this.play(user);

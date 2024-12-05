@@ -4,6 +4,7 @@ import { Crupier } from "./Crupier";
 import * as rls from "readline";
 
 export class BlackJack {
+  private name: string;
   private mazo: Mazo;
   private crupier: Crupier;
   private jugadorMano: Carta[] = [];
@@ -12,6 +13,11 @@ export class BlackJack {
     this.mazo = new Mazo();
     this.mazo.barajar();
     this.crupier = new Crupier();
+  }
+
+  //Getters
+  public getName(): string {
+    return this.name
   }
 
   public iniciarJuego(): void {
