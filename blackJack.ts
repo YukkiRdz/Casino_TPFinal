@@ -1,3 +1,0 @@
-class BlackJack implements Game{
-    
-}
