@@ -1,9 +1,11 @@
+// numberSlotMachine.ts
 import { SlotMachine } from "./slotMachineAbstract";
 
 export class NumberSlotMachine extends SlotMachine {
     constructor() {
         const symbols = ['1', '2', '3', '4', '5', '6', '7', '8', '9', '10'];
-        super(symbols);
+        const gameName = "Number Slot Machine"; 
+        super(symbols, gameName);
     }
 
     public winningsCombinations(): { combination: string; winning: number }[] {
@@ -13,7 +15,6 @@ export class NumberSlotMachine extends SlotMachine {
             { combination: '3 3 3', winning: 1250 },
             { combination: '4 4 4', winning: 2500 },
             { combination: '5 5 5', winning: 5000 },
-        
         ];
     }
 }

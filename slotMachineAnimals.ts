@@ -3,7 +3,9 @@ import { SlotMachine } from "./slotMachineAbstract";
 export class AnimalSlotMachine extends SlotMachine {
     constructor() {
         const animalSymbols = ['🐊', '🦈', '🐢', '🦧', '🦜'];
-        super(animalSymbols);
+        const gameName = "Animal Slot Machine"; 
+
+        super(animalSymbols, gameName);
     }
 
     public winningsCombinations(): { combination: string; winning: number }[] {

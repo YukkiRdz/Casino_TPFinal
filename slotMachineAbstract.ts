@@ -1,13 +1,24 @@
+import { Jugador } from "./jugador";
+
 export abstract class SlotMachine {
     protected symbols: string[];
     protected minBet: number = 1;
+    protected gameName: string;
 
-    constructor(symbols: string[]) {
+    constructor(
+        symbols: string[],
+        gameName: string
+    ) {
         this.symbols = symbols;
+        this.gameName = gameName;
     }
+
     public abstract winningsCombinations(): { combination: string; winning: number }[];
 
- // Método que simula una tirada de la máquina tragamonedas.
+    public getName(): string {
+        return this.gameName;
+    }
+
     public spin(): string {
         const result: string[] = [];
         for (let i = 0; i < 3; i++) {
@@ -17,7 +28,6 @@ export abstract class SlotMachine {
         return result.join(' ');
     }
 
-    // Método que verifica si el resultado de la tirada coincide con alguna combinación ganadora.
     public checkWinnings(result: string): string {
         const combinations = this.winningsCombinations();
         let winningMessage = 'You lost, good luck next time.';
@@ -28,36 +38,29 @@ export abstract class SlotMachine {
         });
         return winningMessage;
     }
-    
-        // Método que ejecuta una jugada completa: realiza una tirada y verifica las ganancias.
-        public play(user: Player): { result: string; message: string } {
-            const userBalance = user.getMoney();
-            if (userBalance < this.minBet) {
-                return { result: '', message: 'Insufficient balance to play.' };
-            } //verifica el saldo del usuario
-    
-           user.setMoney(userBalance - this.minBet); //si el saldo es suficiente se resta.
-    
-           //ejecución del juego
-            const result = this.spin();
-            const message = this.checkWinnings(result);
-    
-            //actualización del saldo en caso de ganancia.
-            if (message.startsWith('You won')) {
-                const winnings = parseInt(message.split(' ')[2]);
-                user.setMoney(user.getMoney() + winnings);
-            }
-    
-            return { result, message };
+
+    public play(user: Jugador): { result: string; message: string } {
+        const userBalance = user.getDinero();
+        if (userBalance < this.minBet) {
+            return { result: '', message: 'Insufficient balance to play.' };
         }
-       
-            // Método que inicia el juego, englobando todos los métodos necesarios.
-            public start(user: Player): void {
-                const gameResult = this.play(user);
-                console.log(`Result: ${gameResult.result}`);
-                console.log(gameResult.message);
-            }
+
+        user.setDinero(userBalance - this.minBet);
+
+        const result = this.spin();
+        const message = this.checkWinnings(result);
+
+        if (message.startsWith('You won')) {
+            const winnings = parseInt(message.split(' ')[2]);
+            user.setDinero(user.getDinero() + winnings);
         }
-    
-    
-    
+
+        return { result, message };
+    }
+
+    public start(user: Jugador): void {
+        const gameResult = this.play(user);
+        console.log(`Result: ${gameResult.result}`);
+        console.log(gameResult.message);
+    }
+}
