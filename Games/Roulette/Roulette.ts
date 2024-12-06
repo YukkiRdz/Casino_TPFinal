@@ -11,11 +11,11 @@ export class Roulette implements Game {
 
 
     startGame(): void {
-        console.log(`-----------------------------------\nThe roulette is spinning...\n-----------------------------------`);
+        console.log(`-------------------------------\n🍀 The roulette is spinning...🍀`);
     }
 
     finishGame(): void {
-        console.log(`-----------------------------------\nThe roulette has ended\n-----------------------------------`);
+        console.log(`🍀 The roulette has ended🍀\n-------------------------------`);
     }
 
     public betMoney(player: Player): void {
@@ -32,9 +32,12 @@ export class Roulette implements Game {
             console.log(`You must bet a number from 0 to 36`);
             return;
         } else {
-            this.play();
             this.bets.push({ player, amount, number });
-            console.log(`${player.getName()} has placed a bet of ${amount} on ${number}`);
+            console.log(`👤 ${player.getName()} has placed a bet of $${amount} on 🍀 ${number} 🍀`);
+            let currentMoney = player.getMoney() - amount;
+            player.setMoney(currentMoney);
+            console.log(`Current balance: $${player.getMoney()}`)
+            this.play();
         }
     }
 
@@ -47,7 +50,7 @@ export class Roulette implements Game {
     public play(): void {
         this.startGame();
         const winnerNumber = this.spinRoulette();
-        console.log(`THE WINNER NUMBER IS: ${winnerNumber}`);
+        console.log(`🔵 The winner number is: 🎊 ${winnerNumber} 🎊`);
 
         const winningPlayersExact = this.bets.filter(bet => bet.number === winnerNumber);
         const winningPlayersColor = this.bets.filter(bet =>
@@ -57,29 +60,34 @@ export class Roulette implements Game {
         );
 
         if (this.redNumbers.includes(winnerNumber)) {
-            console.log(`-----------------------------------\n¡Those who bet on red win!\n-----------------------------------`);
+            console.log(`🟥 Those who bet on red win! 🟥`);
         } else if (this.blackNumbers.includes(winnerNumber)) {
-            console.log(`-----------------------------------\n¡Those who bet on black win!\n-----------------------------------`);
+            console.log(`⬛ Those who bet on black win! ⬛`);
         } else {
-            console.log(`-----------------------------------\n¡Those who bet on green win!\n-----------------------------------`);
+            console.log(`🟩 Those who bet on green win! 🟩`);
         }
 
-        if (winningPlayersExact.length > 0) {
-            console.log(`Exact number winners: `);
+        if (winningPlayersExact.length > 0) { //Si acierta numero gana 35 veces su apuesta
+            console.log(`Players with that exact number winners: `);
             winningPlayersExact.forEach(bet => {
-                console.log(`Player: ${bet.player.getName()}, Bet Amount: ${bet.amount} \n-----------------------------------`);
+                const winnings = bet.amount * 35;
+                bet.player.setMoney(bet.player.getMoney() + winnings);
+                console.log(`✅ Player: ${bet.player.getName()}, Bet Amount: ${bet.amount}, Winnings: 🪙 $${winnings} 🪙\nCurrent balance: $${bet.player.getMoney()}`);
             });
         } else {
-            console.log(`No exact number winners this time! \n-----------------------------------`);
+            console.log(`🚫 No exact number winners this time! 🚫`);
         }
 
-        if (winningPlayersColor.length > 0) {
-            console.log("Color winners:");
+        if (winningPlayersColor.length > 0) { //Si acierta color gana el doble
+            console.log("Players with that color winners:");
             winningPlayersColor.forEach(bet => {
-                console.log(`Player: ${bet.player.getName()}, Bet Amount: ${bet.amount}`);
+                const winnings = bet.amount * 2;
+                bet.player.setMoney(bet.player.getMoney() + winnings);
+                console.log(`✅ Player: ${bet.player.getName()}, Bet Amount: ${bet.amount}, Winnings: 🪙 $${winnings} 🪙\nCurrent balance: $${bet.player.getMoney()}`);
+
             });
         } else {
-            console.log(`No color winners this time! \n-----------------------------------`);
+            console.log(`🚫 No color winners this time! 🚫`);
         }
 
         this.finishGame();

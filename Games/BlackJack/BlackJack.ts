@@ -17,8 +17,9 @@ export class BlackJack {
   }
 
   public startGame(player: Player): void {
-    const userBalance = player.getMoney();
-    let amount: number = readlineSync.questionInt('Enter your bet amount: ');
+    const playerBalance = player.getMoney();
+    let amount: number = readlineSync.questionInt('Enter your bet amount (the minimum bet is $10): ');
+    player.setMoney(playerBalance - amount);
 
     if (player.getMoney() < amount) {
       console.log(`${player.getName()} does not have enough money to place this bet.`);
@@ -26,8 +27,7 @@ export class BlackJack {
   } else if (amount < this.minBet) {
       console.log('You have to bet at least $10.');
   } else {
-
-    player.setMoney(userBalance - amount);
+    player.setMoney(playerBalance - amount);
     console.log("New BlackJack game");
 
     const card1 = this.deck.deal();
@@ -45,7 +45,7 @@ export class BlackJack {
     
     this.playerTurn();
     this.dealerTurn();
-    this.determineWinner(player);
+    this.determineWinner(player, amount);
   }
 }
 
@@ -91,22 +91,24 @@ export class BlackJack {
     }
   }
 
-  public determineWinner(player: Player): void {
-    const playerBalance = player.getMoney()
+  public determineWinner(player: Player, amount: number): void {
+    const playerBalance = player.getMoney();
+    const WinMoney = amount * 3;
     const playerPoints = this.calculatePoints(this.playerHand);
     const dealerPoints = this.dealer.calculatePoints();
 
-    console.log(`Dealer points ${dealerPoints}`);
+    console.log(`Dealer points: ${dealerPoints}`);
     if (playerPoints > 21) {
       console.log("You lost! You went over 21.");
     } else if (dealerPoints > 21 || playerPoints > dealerPoints) {
       console.log("You win!");
-      player.setMoney(playerBalance)
+      player.setMoney(playerBalance + WinMoney);
     } else if (playerPoints < dealerPoints) {
       console.log("You lost. The dealer has more points.");
     } else {
       console.log("It's a tie.");
     }
+    console.log(`Available balance: $${player.getMoney()}`);
   }
 
   private calculatePoints(hand: Card[]): number {

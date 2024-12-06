@@ -68,7 +68,7 @@ export abstract class SlotMachine implements Game {
 
     // Método que inicia el juego y muestra el resultado en la consola.
     public start(user: Player): void {
-        const betAmount = readlineSync.questionInt('Enter your bet amount (The minimum bet is $2): ');
+        const betAmount = readlineSync.questionInt('Enter your bet amount (the minimum bet is $2): ');
 
         if (betAmount >= this.minBet && betAmount <= user.getMoney()) {
             console.log(`You have placed a bet of $${betAmount}.`);

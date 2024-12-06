@@ -57,13 +57,13 @@ function mainMenu() {
           a = false;
       } else {
           console.log('Login failed. Please try again.');
+          mainMenu();
       };
         } while (a === true);
         
       case 3:
         console.log('Goodbye!');
         return;
-
       default:
         console.log('Invalid option. Please try again.');
     }
