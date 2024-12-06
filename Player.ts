@@ -67,7 +67,7 @@ export class Player {
   }
 
   // Métodos
-  depositMoney(amount: number): void {
+  public depositMoney(amount: number): void {
     if (amount > 0) {
       this.money += amount;
       console.log(`You entered $${amount}. New balance: $${this.money}`);
@@ -76,7 +76,7 @@ export class Player {
     }
   }
 
-  withdrawMoney(amount: number): void {
+  public withdrawMoney(amount: number): void {
     if (amount > 0 && amount <= this.money) {
       this.money -= amount;
       console.log(`You withdrew $${amount}. Remaining balance: $${this.money}`);
@@ -85,16 +85,7 @@ export class Player {
     }
   }
 
-  checkBalance(): void {
+  public checkBalance(): void {
     console.log(`Available balance: $${this.money}`);
   }
 }
-
-// const jugador = new Jugador("Jeremías", "jereDev", 1000, "12345678", "20/08/2002");
-
-// Probar los métodos
-// jugador.consultarSaldo(); // Saldo disponible: $1000
-// jugador.ingresarDinero(500); // Ingresaste $500. Nuevo saldo: $1500
-// jugador.retirarDinero(300); // Retiraste $300. Saldo restante: $1200
-// jugador.retirarDinero(2000); // Monto inválido o saldo insuficiente.
-
