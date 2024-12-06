@@ -5,10 +5,10 @@ export class Player {
   private password: string;
   private money: number = 0;
   private ID: number;
-  private birthDate: number;
+  private birthDate: number[];
 
   // Constructor
-  constructor(name: string, user: string, password: string, ID: number, birthDate: number) {
+  constructor(name: string, user: string, password: string, ID: number, birthDate: number[]) {
     this.name = name;
     this.user = user;
     this.password = password;
@@ -37,7 +37,7 @@ export class Player {
     return this.ID;
   }
 
-  getBirthDate(): number {
+  getBirthDate(): number[] {
     return this.birthDate;
   }
   
@@ -62,7 +62,7 @@ export class Player {
     this.ID = ID;
   }
 
-  setBirthDate(birthDate: number): void {
+  setBirthDate(birthDate: number[]): void {
     this.birthDate = birthDate;
   }
 

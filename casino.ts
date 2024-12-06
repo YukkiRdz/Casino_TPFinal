@@ -46,19 +46,39 @@ export class Casino {
     //methods
 
     //registerUser
-    public registerUser(name: string, user: string, password: string, ID: number, birthDate: number): void {
-        //verifica si el usuario esta registrado o no;
+    public registerUser(name: string, user: string, password: string, ID: number, birthDate: number[]): void {
+        
+        // Fecha de referencia: 9 de diciembre de 2024
+        const referenceDate: number[] = [9, 12, 2024]; // [día, mes, año]
+        
+        function calcularEdad(birthdate: number[], currentDate: number[]): number {
+            let [day, month, year] = birthdate;
+            let [currentDay, currentMonth, currentYear] = currentDate;
+
+            let age = currentYear - year;
+
+            if (currentMonth < month || (currentMonth === month && currentDay < day)) {
+                age--;
+            }
+
+            return age;
+        }
+
+        function esMayorDeEdad(birthdate: number[], currentDate: number[]): boolean {
+            return calcularEdad(birthdate, currentDate) >= 18;
+        }
+
+        //verifica si el usuario esta registrado o no;    
         const registeredUser = this.players.find(player => player.getID() === ID);
         //si el usuario fue encontrado;
         if (registeredUser) {
             console.error(`The user with ID: ${ID} is already registered.`);
-        } else if (birthDate < 9122006) {
-            console.error('You must be at least 18 years old to register.');
-            //si el usuario NO fue encontrado lo agreaga al array;
-        } else {
+        } else if (esMayorDeEdad(birthDate, referenceDate)) { //verifica edad
             const newPlayer = new Player(name, user, password, ID, birthDate);
             this.players.push(newPlayer);
             console.warn(`The user with ID: ${ID} has been registered successfully.`);
+        } else {
+            console.error('You must be at least 18 years old to register.');
         }
     }
 
