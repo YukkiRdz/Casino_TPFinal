@@ -3,8 +3,9 @@ import { Deck } from "./Deck";
 import { Dealer } from "./Dealer";
 import { Player } from "../../Player";
 import * as readlineSync from "readline-sync";
+import { Game } from "../../game";
 
-export class BlackJack {
+export class BlackJack implements Game{
   private minBet: number = 10;
   private deck: Deck;
   private dealer: Dealer;
@@ -16,7 +17,7 @@ export class BlackJack {
     this.dealer = new Dealer();
   }
 
-  public startGame(player: Player): void {
+  public start(player: Player): void {
     const playerBalance = player.getMoney();
     let amount: number = readlineSync.questionInt('Enter your bet amount (the minimum bet is $10): ');
     player.setMoney(playerBalance - amount);
@@ -128,4 +129,15 @@ export class BlackJack {
 
     return points;
     }
+
+    // Implementación del método startGame de la interfaz Game.
+    public startGame(): void {
+      console.log(`BlackJack is starting!`);
+
+  }
+
+  // Implementación del método finishGame de la interfaz Game.
+  public finishGame(): void {
+      console.log(`BlackJack has finished!`);
+  }
 }

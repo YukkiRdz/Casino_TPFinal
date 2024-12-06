@@ -175,7 +175,7 @@ function blackJackMenu(verifiedUser: Player) {
         break;
       case 2:
         const BlackJack = casino.createBlackJack();
-        BlackJack.startGame(verifiedUser)
+        BlackJack.start(verifiedUser)
         break;
       case 3:
         console.clear();
