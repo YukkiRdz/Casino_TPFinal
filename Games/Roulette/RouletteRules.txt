@@ -1,0 +1,4 @@
+Predict where the ball will land on the wheel (number or color).
+37 squares (0 to 36).
+The dealer throws the ball; Players bet before they stop.
+Depending on the type of bet, payouts range from 1:1 to 35:1.

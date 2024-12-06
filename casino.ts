@@ -1,10 +1,10 @@
 import { Player } from './Player';
 import { Roulette } from "./Games/Roulette/Roulette";
 import { BlackJack } from "./Games/BlackJack/BlackJack";
-import { SlotMachine } from "./Games/SlotMachine/slotMachineAbstract";
-import { AnimalSlotMachine } from "./Games/SlotMachine/slotMachineAnimals";
+import { SlotMachine } from './Games/SlotMachine/slotMachineAbstract';
+import { AnimalSlotMachine } from './Games/SlotMachine/slotMachineAnimals';
 import { FruitSlotMachine } from "./Games/SlotMachine/slotMachineFruits";
-import { NumberSlotMachine } from "./Games/SlotMachine/slotMachineNumbers";
+import { NumberSlotMachine } from './Games/SlotMachine/slotMachineNumbers';
 
 
 export class Casino {
@@ -12,7 +12,7 @@ export class Casino {
     private players: Player[] = []; //inicializa el array como vacio;
     private games: (BlackJack | Roulette | SlotMachine)[] = [];
 
-    constructor(name: string){
+    constructor(name: string) {
         this.name = name;
         //inicializa el array con los juegos creados;
         this.games = [
@@ -25,12 +25,12 @@ export class Casino {
     }
 
     //getters
-    
-    public getName(): string{
+
+    public getName(): string {
         return this.name;
     }
 
-    public getPlayers(): Player[]{
+    public getPlayers(): Player[] {
         return this.players;
     }
 
@@ -53,90 +53,75 @@ export class Casino {
 
     //methods
 
-    //registrar usuario;
-    registerUser(user: Player): void {
-        //verifica si el usuario esta registrado o no;
-        const registeredUser = this.players.find(player => player.getName() === user.getName());
+    //registerUser
+    public registerUser(name: string, user: string, password: string, ID: number, birthDate: number[]): void {
+        
+        // Fecha de referencia: 9 de diciembre de 2024
+        const referenceDate: number[] = [9, 12, 2024]; // [día, mes, año]
+        
+        function calcularEdad(birthdate: number[], currentDate: number[]): number {
+            let [day, month, year] = birthdate;
+            let [currentDay, currentMonth, currentYear] = currentDate;
+
+            let age = currentYear - year;
+
+            if (currentMonth < month || (currentMonth === month && currentDay < day)) {
+                age--;
+            }
+
+            return age;
+        }
+
+        function esMayorDeEdad(birthdate: number[], currentDate: number[]): boolean {
+            return calcularEdad(birthdate, currentDate) >= 18;
+        }
+
+        //verifica si el usuario esta registrado o no;    
+        const registeredUser = this.players.find(player => player.getID() === ID);
         //si el usuario fue encontrado;
         if (registeredUser) {
-            console.error(`The user ${user.getName()} is already registered.`);
-        } //si el usuario NO fue encontrado lo agreaga al array;
-            else {
-            this.players.push(user);
-            console.warn(`The user ${user.getName()} has been registered successfully.`);
-        }
-    }
-
-    //agregar fondos;
-    addFounds(user: Player, amount: number): void {
-        //verifica que el monto de dinero sea mayor que 0;
-        if (amount <= 0) {
-            console.error('The amount to be entered must be greater than 0.');
-            return; //return para que no se ejecute el resto del codigo;
-        }
-
-        //verifica si el usuario esta registrado o no;
-        const registeredUser = this.players.find(player => player.getName() === user.getName());
-        //si el usuario no esta registrado;
-        if (!registeredUser) {
-            console.error(`The user ${user.getName()} isn't registered.`);
-            return;
-        }
-
-        //define una constante para guardar el monto acumulado y se modifica el dinero del usuario;
-        const newWallet = registeredUser.getMoney() + amount;
-        registeredUser.setMoney(newWallet);
-        console.warn(`$${amount} has been added to the user ${user.getName()}.`);
-        console.log(`The current amount of user ${user.getName()} is $${newWallet}.`);
-    }
-
-    //elegir jugador
-    choosePlayer(user: Player): Player | undefined {
-        //verifica si el usuario esta registrado o no;
-        const chosenPlayer = this.players.find(player => player.getName() === user.getName());
-        //si el usuario no esta registrado;
-        if (!chosenPlayer) {
-            console.error(`The player ${user.getName()} isn't registered.`);
-            return undefined;
+            console.error(`The user with ID: ${ID} is already registered.`);
+        } else if (esMayorDeEdad(birthDate, referenceDate)) { //verifica edad
+            const newPlayer = new Player(name, user, password, ID, birthDate);
+            this.players.push(newPlayer);
+            console.warn(`The user with ID: ${ID} has been registered successfully.`);
         } else {
-            console.log(`The player ${user.getName()} has been chosen.`);
-            return chosenPlayer;
+            console.error('You must be at least 18 years old to register.');
         }
     }
 
-    //elegir juego
-    chooseGame(game: (BlackJack | Roulette | SlotMachine)): (BlackJack | Roulette | SlotMachine) | undefined{
-        //verifica si el juego existe;
-        const selectedGame = this.games.find(g => g.getName() === game.getName());
-        //si NO existe;
-        if (!selectedGame) {
-            console.error(`The selected game doesn't exist.`);
-            return undefined;
+
+    //verificar login
+    public verifyLogin(user: string, password: string): Player | null {
+        const verifyUser = this.players.find(player => player.getUser() === user && player.getPassword() === password);
+        if (verifyUser) {
+            console.log('Login successfull.');
+            return verifyUser;
         } else {
-            console.log(`The user chose ${selectedGame.getName()}.`);
-            return selectedGame;
+            console.error('Invalid user or password.');
+            return null;
         }
     }
 
-    //jugar
-    playGame(chosenPlayer: Player, selectedGame: (BlackJack | Roulette | SlotMachine)): void{
-        //Verifica que anteriormente se haya elegido el jugador;
-        if(!chosenPlayer) {
-            console.error(`The player was not chosen.`)
-            return;
-        }
+    //crear juegos
+    public createBlackJack(): BlackJack {
+        return new BlackJack();
+    }
 
-        //Verifica que anteriormente se haya elegido el juego;
-        if(!selectedGame) {
-            console.error("The game was not chosen.")
-            return;
-        }
+    public createRoulette(): Roulette {
+        return new Roulette();
+    }
 
-        //Si el juego y el jugador han sido elegidos;
-        if (chosenPlayer  && selectedGame) {
-            console.log(`Starting the game ${selectedGame.getName()} as the player ${chosenPlayer.getName()}.`);
-            //Inicia el juego con el jugador elegido;
-            selectedGame.start(chosenPlayer); //metodo dentro del juego;
-        }
+    public createAnimalSlotMachine(): SlotMachine {
+        return new AnimalSlotMachine();
+    }
+
+    public createFruitSlotMachine(): SlotMachine {
+        return new FruitSlotMachine();
+    }
+
+    public createNumberSlotMachine(): SlotMachine {
+        return new NumberSlotMachine();
     }
 }
+

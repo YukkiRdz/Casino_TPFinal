@@ -2,15 +2,16 @@ export class Player {
   // Atributos
   private name: string;
   private user: string;
-  private money: number;
-  private ID: string;
-  private birthDate: string;
+  private password: string;
+  private money: number = 0;
+  private ID: number;
+  private birthDate: number[];
 
   // Constructor
-  constructor(name: string, user: string, money: number, ID: string, birthDate: string) {
+  constructor(name: string, user: string, password: string, ID: number, birthDate: number[]) {
     this.name = name;
     this.user = user;
-    this.money = money;
+    this.password = password;
     this.ID = ID;
     this.birthDate = birthDate;
   }
@@ -24,15 +25,19 @@ export class Player {
     return this.user;
   }
 
+  getPassword(): string{
+    return this.password;
+  }
+
   getMoney(): number {
     return this.money;
   }
 
-  getID(): string {
+  getID(): number {
     return this.ID;
   }
 
-  getBirthDate(): string {
+  getBirthDate(): number[] {
     return this.birthDate;
   }
   
@@ -45,15 +50,19 @@ export class Player {
     this.user = user;
   }
 
+  setPassword(password: string): void {
+    this.password = password;
+  }
+
   setMoney(money: number): void {
     this.money = money;
   }
 
-  setID(ID: string): void {
+  setID(ID: number): void {
     this.ID = ID;
   }
 
-  setBirthDate(birthDate: string): void {
+  setBirthDate(birthDate: number[]): void {
     this.birthDate = birthDate;
   }
 
