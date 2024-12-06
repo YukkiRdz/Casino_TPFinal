@@ -2,27 +2,6 @@ import * as readlineSync from 'readline-sync';
 import { Player } from './Player';
 import { Casino} from './casino';
 
-// import { BlackJack } from "./BlackJack";
-
-// function main(): void {
-//   console.log("Bienvenido al Blackjack!");
-
-//   const juego = new BlackJack();
-
-//   // Inicia el juego y reparte las cartas iniciales
-//   juego.iniciarJuego();
-
-//   // Turno del jugador
-//   juego.turnoJugador();
-
-//   // Turno del crupier (si el jugador no pierde en su turno)
-//   juego.turnoCrupier();
-
-//   // Determina al ganador
-//   juego.determinarGanador();
-// }
-
-// main();
 let casino = new Casino('De Ruta')
 
 function mainMenu() {
@@ -76,9 +55,10 @@ function userMenu(verifiedUser: Player) {
     console.log('\n=== USER MENU ===');
     console.log('1.Deposit money');
     console.log('2.My wallet');
-    console.log('3.Change password');
-    console.log('4.Casino menu');
-    console.log('5.Back to main menu');
+    console.log('3.Withdraw money');
+    console.log('4.Change password');
+    console.log('5.Casino menu');
+    console.log('6.Back to main menu');
     option = readlineSync.questionInt(`Select one option: `);
 
     switch (option) {
@@ -92,15 +72,20 @@ function userMenu(verifiedUser: Player) {
         break;
 
       case 3:
+        let amountWithdraw = readlineSync.questionInt('Enter amount to withdraw: ');
+        verifiedUser.withdrawMoney(amountWithdraw);
+        break;
+      
+      case 4:
         let newPassword = readlineSync.question('Enter your new password: ');
         verifiedUser.setPassword(newPassword);
         break;
 
-      case 4:
+      case 5:
         console.clear();
         casinoMenu(verifiedUser);
         break;
-      case 5:
+      case 6:
         console.clear();
         mainMenu();
         break;
@@ -108,7 +93,7 @@ function userMenu(verifiedUser: Player) {
       default:
         console.log('Invalid option. Please try again.');
     }
-  } while (option !== 5);
+  } while (option !== 6);
 }
 
 function casinoMenu(verifiedUser: Player) {
