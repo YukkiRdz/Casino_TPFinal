@@ -107,6 +107,7 @@ export class BlackJack {
       console.log("You lost. The dealer has more points.");
     } else {
       console.log("It's a tie.");
+      player.setMoney(playerBalance + amount);
     }
     console.log(`Available balance: $${player.getMoney()}`);
   }
