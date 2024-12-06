@@ -1,114 +1,128 @@
-import { Carta } from "./Carta";
-import { Mazo } from "./Mazo";
-import { Crupier } from "./Crupier";
+import { Card } from "./Card";
+import { Deck } from "./Deck";
+import { Dealer } from "./Dealer";
+import { Player } from "../../Player";
 import * as readlineSync from "readline-sync";
 
-
 export class BlackJack {
-  private name: string;
-  private mazo: Mazo;
-  private crupier: Crupier;
-  private jugadorMano: Carta[] = [];
+  private minBet: number = 10;
+  private deck: Deck;
+  private dealer: Dealer;
+  private playerHand: Card[] = [];
 
   constructor() {
-    this.mazo = new Mazo();
-    this.mazo.barajar();
-    this.crupier = new Crupier();
+    this.deck = new Deck();
+    this.deck.shuffle();
+    this.dealer = new Dealer();
   }
 
-  //Getters
-  public getName(): string {
-    return this.name
+  public startGame(player: Player): void {
+    const userBalance = player.getMoney();
+    let amount: number = readlineSync.questionInt('Enter your bet amount: ');
+
+    if (player.getMoney() < amount) {
+      console.log(`${player.getName()} does not have enough money to place this bet.`);
+      return;
+  } else if (amount < this.minBet) {
+      console.log('You have to bet at least $10.');
+  } else {
+
+    player.setMoney(userBalance - amount);
+    console.log("New BlackJack game");
+
+    const card1 = this.deck.deal();
+    const card2 = this.deck.deal();
+    if (card1) this.playerHand.push(card1);
+    if (card2) this.playerHand.push(card2);
+
+    const dealerCard1 = this.deck.deal();
+    const dealerCard2 = this.deck.deal();
+    if (dealerCard1) this.dealer.receiveCard(dealerCard1);
+    if (dealerCard2) this.dealer.receiveCard(dealerCard2);
+
+    console.log("Your hand:", this.playerHand);
+    console.log("Dealer's visible card:", this.dealer.showHand()[0]);
+    
+    this.playerTurn();
+    this.dealerTurn();
+    this.determineWinner(player);
   }
+}
 
-  public iniciarJuego(): void {
-    console.log("Nueva partida de BlackJack");
-
-    const carta1 = this.mazo.repartir();
-    const carta2 = this.mazo.repartir();
-    if (carta1) this.jugadorMano.push(carta1);
-    if (carta2) this.jugadorMano.push(carta2);
-
-    const cartaCrupier1 = this.mazo.repartir();
-    const cartaCrupier2 = this.mazo.repartir();
-    if (cartaCrupier1) this.crupier.recibirMano(cartaCrupier1);
-    if (cartaCrupier2) this.crupier.recibirMano(cartaCrupier2);
-
-    console.log("Tu mano:", this.jugadorMano);
-    console.log("Carta visible del crupier:", this.crupier.mostrarMano()[0]);
-  }
-
-  public turnoJugador(): void {
+  public playerTurn(): void {
     while (true) {
-      const puntos = this.calcularPuntos(this.jugadorMano);
-      console.log("Tus puntos:", puntos);
+      const points = this.calculatePoints(this.playerHand);
+      console.log("Your points:", points);
 
-      if (puntos > 21) {
-        console.log("Te pasaste de 21, perdiste.");
+      if (points > 21) {
+        console.log("You went over 21, you lost.");
         return;
       }
 
       const decision = readlineSync.question(
-        "¿Quieres pedir otra carta? (s/n): "
+        "Do you want to take another card? (y/n): "
       );
-      if (decision.toLowerCase() !== "s") {
+      if (decision.toLowerCase() !== "y") {
         break;
       }
 
-      const nuevaCarta = this.mazo.repartir();
-      if (nuevaCarta) {
-        this.jugadorMano.push(nuevaCarta);
-        console.log("Tu mano:", this.jugadorMano);
+      const newCard = this.deck.deal();
+      if (newCard) {
+        this.playerHand.push(newCard);
+        console.log("Your hand:", this.playerHand);
       } else {
-        console.log("No quedan cartas en el mazo.");
+        console.log("No more cards in the deck.");
         break;
       }
     }
   }
 
-  public turnoCrupier(): void {
-    console.log("Turno del crupier");
-    while (this.crupier.debePedirCarta()) {
-      const nuevaCarta = this.mazo.repartir();
-      if (nuevaCarta) {
-        this.crupier.recibirMano(nuevaCarta);
-        console.log("Mano del crupier:", this.crupier.mostrarMano());
+  public dealerTurn(): void {
+    console.log("Dealer's turn");
+    while (this.dealer.shouldAskForCard()) {
+      const newCard = this.deck.deal();
+      if (newCard) {
+        this.dealer.receiveCard(newCard);
+        console.log("Dealer's hand:", this.dealer.showHand());
       } else {
-        console.log("No quedan cartas en el mazo.");
+        console.log("No more cards in the deck.");
         break;
       }
     }
   }
 
-  public determinarGanador(): void {
-    const puntosJugador = this.calcularPuntos(this.jugadorMano);
-    const puntosCrupier = this.crupier.calcularPuntos();
+  public determineWinner(player: Player): void {
+    const playerBalance = player.getMoney()
+    const playerPoints = this.calculatePoints(this.playerHand);
+    const dealerPoints = this.dealer.calculatePoints();
 
-    if (puntosJugador > 21) {
-      console.log("¡Perdiste! Te pasaste de 21.");
-    } else if (puntosCrupier > 21 || puntosJugador > puntosCrupier) {
-      console.log("¡Ganaste! 🎉");
-    } else if (puntosJugador < puntosCrupier) {
-      console.log("Perdiste. El crupier tiene más puntos.");
+    console.log(`Dealer points ${dealerPoints}`);
+    if (playerPoints > 21) {
+      console.log("You lost! You went over 21.");
+    } else if (dealerPoints > 21 || playerPoints > dealerPoints) {
+      console.log("You win!");
+      player.setMoney(playerBalance)
+    } else if (playerPoints < dealerPoints) {
+      console.log("You lost. The dealer has more points.");
     } else {
-      console.log("Es un empate.");
+      console.log("It's a tie.");
     }
   }
 
-  private calcularPuntos(mano: Carta[]): number {
-    let puntos = 0;
-    let ases = 0;
+  private calculatePoints(hand: Card[]): number {
+    let points = 0;
+    let aces = 0;
 
-    for (const carta of mano) {
-      puntos += carta.obtenerValorNumerico();
-      if (carta.valor === "A") ases++;
+    for (const card of hand) {
+      points += card.getNumericValue();
+      if (card.value === "A") aces++;
     }
 
-    while (puntos > 21 && ases > 0) {
-      puntos -= 10;
-      ases--;
+    while (points > 21 && aces > 0) {
+      points -= 10;
+      aces--;
     }
 
-    return puntos;
-  }
+    return points;
+    }
 }

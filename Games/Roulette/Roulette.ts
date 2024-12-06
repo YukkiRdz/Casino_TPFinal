@@ -1,17 +1,15 @@
 import { Game } from "../../game";
 import { Player } from "../../Player";
+import * as readlineSync from 'readline-sync';
 
 export class Roulette implements Game {
-    private name: string;
+
     private greenZero: number = 0;
     private redNumbers: number[] = [1, 3, 5, 7, 9, 11, 13, 15, 17, 19, 21, 23, 25, 27, 29, 31, 33, 35];
     private blackNumbers: number[] = [2, 4, 6, 8, 10, 12, 14, 16, 18, 20, 22, 24, 26, 28, 30, 32, 34, 36];
     private bets: { player: Player, amount: number, number: number }[] = [];
 
-    //getters
-    public getName(): string {
-        return this.name
-    }
+
     startGame(): void {
         console.log(`-----------------------------------\nThe roulette is spinning...\n-----------------------------------`);
     }
@@ -20,17 +18,24 @@ export class Roulette implements Game {
         console.log(`-----------------------------------\nThe roulette has ended\n-----------------------------------`);
     }
 
-    betMoney(player: Player, amount: number, number: number): void {
+    public betMoney(player: Player): void {
+        const minBet: number = 1;
+        let amount: number = readlineSync.questionInt('Enter your bet amount: ');
+        let number: number = readlineSync.questionInt('Enter your bet number (0-36): ');
+
         if (player.getMoney() < amount) {
             console.log(`${player.getName()} does not have enough money to place this bet.`);
             return;
-        }
-        if (number < 0 || number > 36) {
+        } else if (amount < minBet) {
+            console.log('You have to bet at least $1.');
+        } else if (number < 0 || number > 36) {
             console.log(`You must bet a number from 0 to 36`);
             return;
+        } else {
+            this.play();
+            this.bets.push({ player, amount, number });
+            console.log(`${player.getName()} has placed a bet of ${amount} on ${number}`);
         }
-        this.bets.push({ player, amount, number });
-        console.log(`${player.getName()} has placed a bet of ${amount} on ${number}`);
     }
 
     public spinRoulette(): number {
@@ -80,20 +85,3 @@ export class Roulette implements Game {
         this.finishGame();
     }
 }
-
-let ruleta: Roulette = new Roulette();
-
-let playerOne: Player = new Player("Pepe", 2000);
-ruleta.betMoney(playerOne, 2000, 21);
-
-let playerTwo: Player = new Player("Lola", 5000);
-ruleta.betMoney(playerTwo, 5000, 1);
-
-let playerThree: Player = new Player("Agustin", 4000);
-ruleta.betMoney(playerThree, 4000, 0);
-
-let playerFour: Player = new Player("Nashe", 12000);
-ruleta.betMoney(playerFour, 12000, 30);
-
-
-ruleta.play();
