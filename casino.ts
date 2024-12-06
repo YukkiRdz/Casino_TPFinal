@@ -14,14 +14,6 @@ export class Casino {
 
     constructor(name: string){
         this.name = name;
-        //inicializa el array con los juegos creados;
-        this.games = [
-            new BlackJack(),
-            new Roulette(),
-            new FruitSlotMachine(),
-            new NumberSlotMachine(),
-            new AnimalSlotMachine()
-        ];
     }
 
     //getters
