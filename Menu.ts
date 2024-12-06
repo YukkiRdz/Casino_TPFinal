@@ -73,6 +73,7 @@ function userMenu(verifiedUser: Player) {
         break;
 
       case 3:
+        verifiedUser.checkBalance();
         let amountWithdraw = readlineSync.questionInt('Enter amount to withdraw: ');
         verifiedUser.withdrawMoney(amountWithdraw);
         break;
