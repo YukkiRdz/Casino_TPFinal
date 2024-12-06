@@ -20,26 +20,59 @@ function mainMenu() {
         let name = readlineSync.question('Enter your name: ');
         let username = readlineSync.question('Enter your username: ');
         let pass = readlineSync.question('Enter your password: ');
-        let id = readlineSync.questionInt('Enter your ID: ');
-        let birthdate = readlineSync.questionInt('Enter your birthdate (dd/mm/yy): ');
+        let id: number;
+        let idString: string;        
+        do {
+          id = readlineSync.questionInt('Enter your ID: ');
+          idString = id.toString(); 
+          if (idString.length < 7 || idString.length > 10) {
+            console.log("Error: ID must be between 7 and 10 digits. Try again.");
+          }
+        } while (idString.length < 7 || idString.length > 10);
+        let birthday: number;
+        let birthmonth: number;
+        let birthyear: number;
+
+        do {
+          birthday = readlineSync.questionInt('Day of birth: ');
+          if (birthday <= 0 || birthday > 31) {
+            console.error("Incorrect day. Try again")
+          }
+        } while (birthday <= 0 || birthday > 31);
+
+        do {
+          birthmonth = readlineSync.questionInt('Month of birth: ');
+          if (birthmonth <= 0 || birthmonth > 12) {
+            console.error("Incorrect mounth. Try again")
+          }
+        } while (birthmonth <= 0 || birthmonth > 12);
+
+        do {
+          birthyear = readlineSync.questionInt('Year of birth : ');
+          if (birthyear <= 1900 || birthyear > 2024) {
+            console.error("You must be at least 18 years old.")
+          }
+        } while (birthyear <= 1900 || birthyear > 2024);
+
+        let birthdate: number[] = [birthday, birthmonth, birthyear];
         casino.registerUser(name.toLowerCase(), username.toLowerCase(), pass, id, birthdate);
         break;
 
       case 2:
-        let a: boolean = true;
+        let tf: boolean = true;
         do {
           console.log('\n=== LOGIN MENU ===');
-        let loginUsername = readlineSync.question('Enter your username: ');
-        let loginPass = readlineSync.question('Enter your password: ');
-        let verifiedUser = casino.verifyLogin(loginUsername.toLowerCase(), loginPass);
-        if (verifiedUser) {
-          userMenu(verifiedUser);
-          a = false;
-      } else {
-          console.log('Login failed. Please try again.');
-          mainMenu();
-      };
-        } while (a === true);
+          let loginUsername = readlineSync.question('Enter your username: ');
+          let loginPass = readlineSync.question('Enter your password: ');
+          let verifiedUser = casino.verifyLogin(loginUsername.toLowerCase(), loginPass);
+          if (verifiedUser) {
+            userMenu(verifiedUser);
+            tf = false;
+          } else {
+            console.log('Login failed. Please try again.');
+            mainMenu();
+          };
+        } while (tf === true);
         
       case 3:
         console.log('Goodbye!');
@@ -73,6 +106,7 @@ function userMenu(verifiedUser: Player) {
         break;
 
       case 3:
+        verifiedUser.checkBalance();
         let amountWithdraw = readlineSync.questionInt('Enter amount to withdraw: ');
         verifiedUser.withdrawMoney(amountWithdraw);
         break;
@@ -174,7 +208,7 @@ function blackJackMenu(verifiedUser: Player) {
         break;
       case 2:
         const BlackJack = casino.createBlackJack();
-        BlackJack.startGame(verifiedUser)
+        BlackJack.start(verifiedUser)
         break;
       case 3:
         console.clear();

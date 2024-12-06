@@ -5,10 +5,10 @@ export class Player {
   private password: string;
   private money: number = 0;
   private ID: number;
-  private birthDate: number;
+  private birthDate: number[];
 
   // Constructor
-  constructor(name: string, user: string, password: string, ID: number, birthDate: number) {
+  constructor(name: string, user: string, password: string, ID: number, birthDate: number[]) {
     this.name = name;
     this.user = user;
     this.password = password;
@@ -37,7 +37,7 @@ export class Player {
     return this.ID;
   }
 
-  getBirthDate(): number {
+  getBirthDate(): number[] {
     return this.birthDate;
   }
   
@@ -62,12 +62,12 @@ export class Player {
     this.ID = ID;
   }
 
-  setBirthDate(birthDate: number): void {
+  setBirthDate(birthDate: number[]): void {
     this.birthDate = birthDate;
   }
 
   // Métodos
-  depositMoney(amount: number): void {
+  public depositMoney(amount: number): void {
     if (amount > 0) {
       this.money += amount;
       console.log(`You entered $${amount}. New balance: $${this.money}`);
@@ -76,7 +76,7 @@ export class Player {
     }
   }
 
-  withdrawMoney(amount: number): void {
+  public withdrawMoney(amount: number): void {
     if (amount > 0 && amount <= this.money) {
       this.money -= amount;
       console.log(`You withdrew $${amount}. Remaining balance: $${this.money}`);
@@ -85,16 +85,7 @@ export class Player {
     }
   }
 
-  checkBalance(): void {
+  public checkBalance(): void {
     console.log(`Available balance: $${this.money}`);
   }
 }
-
-// const jugador = new Jugador("Jeremías", "jereDev", 1000, "12345678", "20/08/2002");
-
-// Probar los métodos
-// jugador.consultarSaldo(); // Saldo disponible: $1000
-// jugador.ingresarDinero(500); // Ingresaste $500. Nuevo saldo: $1500
-// jugador.retirarDinero(300); // Retiraste $300. Saldo restante: $1200
-// jugador.retirarDinero(2000); // Monto inválido o saldo insuficiente.
-
