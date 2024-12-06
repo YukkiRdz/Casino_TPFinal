@@ -1,4 +1,5 @@
 import * as readlineSync from 'readline-sync';
+import * as fs from 'fs';
 import { Player } from './Player';
 import { Casino} from './casino';
 
@@ -167,12 +168,9 @@ function blackJackMenu(verifiedUser: Player) {
 
     switch (option) {
       case 1:
-        console.log('The goal is to reach 21 or get as close as possible without exceeding it.');
-        console.log('Each player gets 2 cards; you can "Hit" (draw more) or "Stand" (keep your hand).');
-        console.log('Number cards are worth their value; J, Q, K are worth 10; Ace is 1 or 11.');
-        console.log('If you exceed 21, you lose automatically.');
-        console.log('In a tie, the dealer and the player push (no one wins or loses).')
-        console.log('The closest to 21 without exceeding wins.');
+        const blackJackRules = readRules('./Games/BlackJack/BlackJackRules.txt');
+        console.log('\n=== BLACKJACK RULES ===');
+        console.log(blackJackRules);
         break;
       case 2:
         const BlackJack = casino.createBlackJack();
@@ -202,10 +200,9 @@ function slotMachineMenu(verifiedUser: Player) {
 
     switch (option) {
       case 1:
-        console.log('=== Rules ===');
-        console.log('1. Each game costs a certain amount to play.');
-        console.log('2. You can win different prizes based on the symbols.');
-        console.log('3. Have fun and gamble responsibly!');
+        const slotMachineRules = readRules('./Games/SlotMachine/SlotMachineRules.txt');
+        console.log('\n=== SLOTMACHINE RULES ===');
+        console.log(slotMachineRules);
         break;
       case 2:
         const animal = casino.createAnimalSlotMachine()
@@ -247,10 +244,9 @@ function rouletteMenu(verifiedUser: Player) {
 
     switch (option) {
       case 1:
-        console.log('1. Predict where the ball will land on the wheel (number, color, or feature).');
-        console.log('2. 37 squares (0 to 36).');
-        console.log('3. The dealer throws the ball; Players bet before they stop.');
-        console.log('4. Depending on the type of bet, payouts range from 1:1 to 35:1');
+        const rouletteRules = readRules('./Games/Roulette/RouletteRules.txt');
+        console.log('\n=== ROULETTE RULES ===');
+        console.log(rouletteRules);
         break;
       case 2:
         const roulette = casino.createRoulette()
@@ -266,6 +262,17 @@ function rouletteMenu(verifiedUser: Player) {
     }
   } while (option !== 3);
 
+}
+
+//lee instrucciones de un archivo txt
+function readRules(filePath: string): string {
+  try {
+      return fs.readFileSync(filePath, 'utf8');
+  } catch (err) {
+    const error = err as Error; // para asegurar que es un error y no tener problema con message
+    console.error(`Error reading file ${filePath}:`, error.message);
+    return 'Instructions not available at the moment.';
+  }
 }
 
 mainMenu();
