@@ -1,0 +1,6 @@
+The goal is to reach 21 or get as close as possible without exceeding it.
+Each player gets 2 cards; you can "Hit" (draw more) or "Stand" (keep your hand).
+Number cards are worth their value; J, Q, K are worth 10; Ace is 1 or 11.
+If you exceed 21, you lose automatically.
+In a tie, the dealer and the player push (no one wins or loses).
+The closest to 21 without exceeding wins.
